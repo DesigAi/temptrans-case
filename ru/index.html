@@ -20,13 +20,112 @@
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
     <title>Разбор кейса TempTrans</title>
     <style>
-      html, body, iframe { width: 100%; height: 100%; margin: 0; border: 0; }
-      body { background: #111; }
-      .fallback { display: none; }
+      html, body { width: 100%; height: 100%; margin: 0; }
+      body { background: #111; font-family: Arial, sans-serif; }
+      .desktop-pdf { width: 100%; height: 100%; border: 0; display: block; }
+      .mobile-case { display: none; }
+
+      @media (max-width: 767px) {
+        body { background: #f1f3f5; }
+        .desktop-pdf { display: none; }
+        .mobile-case { display: block; min-height: 100%; padding: 18px 14px 34px; box-sizing: border-box; }
+        .mobile-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 auto 16px; max-width: 720px; }
+        .mobile-header h1 { margin: 0; color: #111; font-size: 18px; line-height: 1.2; }
+        .pdf-link { flex: 0 0 auto; color: #006fd1; font-size: 13px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+        .mobile-note { margin: 0 auto 14px; max-width: 720px; color: #5c6370; font-size: 13px; line-height: 1.4; }
+        .slides { display: grid; gap: 14px; margin: 0 auto; max-width: 720px; }
+        .slide-thumb { appearance: none; display: block; width: 100%; padding: 0; overflow: hidden; background: #111; border: 1px solid #d8dde3; border-radius: 10px; box-shadow: 0 4px 14px rgba(20, 29, 38, .12); cursor: pointer; }
+        .slide-thumb img { display: block; width: 100%; height: auto; }
+        .slide-thumb:focus-visible, .viewer button:focus-visible { outline: 3px solid #3b9cff; outline-offset: 3px; }
+        .slide-number { display: block; padding: 8px 10px; background: #fff; color: #4f5967; text-align: left; font-size: 12px; font-weight: 700; }
+        .viewer[hidden] { display: none; }
+        .viewer { position: fixed; z-index: 10; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, .96); }
+        .viewer-image { display: block; max-width: 100%; max-height: 100%; object-fit: contain; }
+        .viewer-close, .viewer-prev, .viewer-next { position: absolute; z-index: 1; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .16); color: #fff; font-size: 30px; cursor: pointer; }
+        .viewer-close { top: 16px; right: 16px; font-size: 28px; }
+        .viewer-prev { left: 10px; top: calc(50% - 22px); }
+        .viewer-next { right: 10px; top: calc(50% - 22px); }
+        .viewer-count { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); padding: 7px 11px; border-radius: 16px; background: rgba(0, 0, 0, .62); color: #fff; font-size: 13px; }
+      }
     </style>
   </head>
   <body>
-    <iframe src="./temptrans-case-ru.pdf" title="Разбор кейса TempTrans"></iframe>
-    <p class="fallback"><a href="./temptrans-case-ru.pdf">Открыть PDF</a></p>
+    <iframe class="desktop-pdf" src="./temptrans-case-ru.pdf" title="Разбор кейса TempTrans"></iframe>
+
+    <main class="mobile-case" aria-label="Разбор кейса TempTrans">
+      <header class="mobile-header">
+        <h1>Разбор кейса TempTrans</h1>
+        <a class="pdf-link" href="./temptrans-case-ru.pdf" target="_blank" rel="noopener">PDF ↗</a>
+      </header>
+      <p class="mobile-note">Нажмите на слайд, чтобы открыть его крупно и листать презентацию.</p>
+      <section class="slides" id="slides" aria-label="Слайды презентации"></section>
+    </main>
+
+    <div class="viewer" id="viewer" hidden role="dialog" aria-modal="true" aria-label="Просмотр слайдов">
+      <button class="viewer-close" type="button" aria-label="Закрыть просмотр">×</button>
+      <button class="viewer-prev" type="button" aria-label="Предыдущий слайд">‹</button>
+      <img class="viewer-image" id="viewer-image" alt="">
+      <button class="viewer-next" type="button" aria-label="Следующий слайд">›</button>
+      <output class="viewer-count" id="viewer-count"></output>
+    </div>
+
+    <script>
+      const slides = Array.from({ length: 10 }, (_, index) => `slides/slide-${String(index + 1).padStart(2, '0')}.jpg`);
+      const slidesElement = document.getElementById('slides');
+      const viewer = document.getElementById('viewer');
+      const viewerImage = document.getElementById('viewer-image');
+      const viewerCount = document.getElementById('viewer-count');
+      const closeButton = viewer.querySelector('.viewer-close');
+      const previousButton = viewer.querySelector('.viewer-prev');
+      const nextButton = viewer.querySelector('.viewer-next');
+      let activeIndex = 0;
+      let touchStartX = 0;
+
+      slides.forEach((source, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'slide-thumb';
+        button.setAttribute('aria-label', `Открыть слайд ${index + 1}`);
+        button.innerHTML = `<img src="${source}" alt="Слайд ${index + 1} презентации TempTrans" loading="lazy"><span class="slide-number">Слайд ${index + 1} из ${slides.length}</span>`;
+        button.addEventListener('click', () => openViewer(index));
+        slidesElement.appendChild(button);
+      });
+
+      function showSlide(index) {
+        activeIndex = (index + slides.length) % slides.length;
+        viewerImage.src = slides[activeIndex];
+        viewerImage.alt = `Слайд ${activeIndex + 1} презентации TempTrans`;
+        viewerCount.value = `${activeIndex + 1} / ${slides.length}`;
+      }
+
+      function openViewer(index) {
+        showSlide(index);
+        viewer.hidden = false;
+        document.body.style.overflow = 'hidden';
+        closeButton.focus();
+      }
+
+      function closeViewer() {
+        viewer.hidden = true;
+        document.body.style.overflow = '';
+      }
+
+      closeButton.addEventListener('click', closeViewer);
+      previousButton.addEventListener('click', () => showSlide(activeIndex - 1));
+      nextButton.addEventListener('click', () => showSlide(activeIndex + 1));
+      viewer.addEventListener('click', (event) => { if (event.target === viewer) closeViewer(); });
+      viewer.addEventListener('touchstart', (event) => { touchStartX = event.changedTouches[0].screenX; }, { passive: true });
+      viewer.addEventListener('touchend', (event) => {
+        const distance = event.changedTouches[0].screenX - touchStartX;
+        if (Math.abs(distance) < 45) return;
+        showSlide(activeIndex + (distance < 0 ? 1 : -1));
+      }, { passive: true });
+      document.addEventListener('keydown', (event) => {
+        if (viewer.hidden) return;
+        if (event.key === 'Escape') closeViewer();
+        if (event.key === 'ArrowLeft') showSlide(activeIndex - 1);
+        if (event.key === 'ArrowRight') showSlide(activeIndex + 1);
+      });
+    </script>
   </body>
 </html>
