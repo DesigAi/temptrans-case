@@ -42,22 +42,6 @@
         .mobile-note { margin: 0 auto 14px; max-width: 720px; color: #5c6370; font-size: 14px; line-height: 1.4; }
         .mobile-vertical-slides { display: grid; gap: 14px; margin: 0 auto; max-width: 720px; }
         .mobile-vertical-slides img { display: block; width: 100%; height: auto; border: 1px solid #d8dde3; border-radius: 10px; box-sizing: border-box; box-shadow: 0 4px 14px rgba(20, 29, 38, .12); }
-        .slides { display: none; }
-        .slides { display: grid; gap: 14px; margin: 0 auto; max-width: 720px; }
-        .slide-thumb { appearance: none; display: block; width: 100%; padding: 0; overflow: hidden; background: #111; border: 1px solid #d8dde3; border-radius: 10px; box-shadow: 0 4px 14px rgba(20, 29, 38, .12); cursor: pointer; }
-        .slide-thumb img { display: block; width: 100%; height: auto; }
-        .slide-thumb:focus-visible, .viewer button:focus-visible { outline: 3px solid #3b9cff; outline-offset: 3px; }
-        .slide-number { display: block; padding: 8px 10px; background: #fff; color: #4f5967; text-align: left; font-size: 12px; font-weight: 700; }
-        .viewer[hidden] { display: none; }
-        .viewer { position: fixed; z-index: 10; inset: 0; display: flex; align-items: center; justify-content: center; box-sizing: border-box; padding: 76px 18px 118px; background: rgba(0, 0, 0, .96); }
-        .viewer-image { display: block; max-width: 100%; max-height: calc(100dvh - 194px); object-fit: contain; }
-        .viewer-close { position: absolute; z-index: 1; display: grid; place-items: center; width: 56px; height: 56px; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .16); color: #fff; font-size: 34px; cursor: pointer; }
-        .viewer-close { top: 16px; right: 16px; font-size: 28px; }
-        .viewer-navigation { position: absolute; right: 18px; bottom: 22px; left: 18px; display: grid; grid-template-columns: 72px 1fr 72px; align-items: end; }
-        .viewer-prev, .viewer-next { display: grid; place-items: center; width: 72px; height: 72px; padding: 0; border: 1px solid rgba(255, 255, 255, .5); border-radius: 10px; background: #1674d1; color: #fff; font-size: 44px; line-height: 1; cursor: pointer; }
-        .viewer-prev:disabled, .viewer-next:disabled { border-color: rgba(255, 255, 255, .16); background: rgba(255, 255, 255, .08); color: rgba(255, 255, 255, .25); cursor: default; }
-        .viewer-next { justify-self: end; }
-        .viewer-count { justify-self: center; align-self: end; margin-bottom: 13px; color: #fff; font-size: 15px; font-weight: 700; }
       }
     </style>
   </head>
@@ -78,80 +62,8 @@
       </section>
       <p class="mobile-note">Листайте вниз, чтобы изучить презентацию.</p>
       <section class="mobile-vertical-slides" aria-label="Вертикальная версия презентации">
-        <img src="./mobile-slides/slide-01.png" alt="Первый слайд презентации TempTrans в мобильном формате">
+        <img src="./mobile-slides/slide-01.png" alt="Первый слайд презентации TempTrans в мобильном формате" loading="eager" fetchpriority="high">
       </section>
-      <section class="slides" id="slides" aria-label="Слайды презентации"></section>
     </main>
-
-    <div class="viewer" id="viewer" hidden role="dialog" aria-modal="true" aria-label="Просмотр слайдов">
-      <button class="viewer-close" type="button" aria-label="Закрыть просмотр">×</button>
-      <img class="viewer-image" id="viewer-image" alt="">
-      <div class="viewer-navigation" aria-label="Навигация по слайдам">
-        <button class="viewer-prev" type="button" aria-label="Предыдущий слайд">‹</button>
-        <output class="viewer-count" id="viewer-count"></output>
-        <button class="viewer-next" type="button" aria-label="Следующий слайд">›</button>
-      </div>
-    </div>
-
-    <script>
-      const slides = Array.from({ length: 10 }, (_, index) => `slides/slide-${String(index + 1).padStart(2, '0')}.png`);
-      const slidesElement = document.getElementById('slides');
-      const viewer = document.getElementById('viewer');
-      const viewerImage = document.getElementById('viewer-image');
-      const viewerCount = document.getElementById('viewer-count');
-      const closeButton = viewer.querySelector('.viewer-close');
-      const previousButton = viewer.querySelector('.viewer-prev');
-      const nextButton = viewer.querySelector('.viewer-next');
-      let activeIndex = 0;
-      let touchStartX = 0;
-
-      slides.forEach((source, index) => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'slide-thumb';
-        button.setAttribute('aria-label', `Открыть слайд ${index + 1}`);
-        button.innerHTML = `<img src="${source}" alt="Слайд ${index + 1} презентации TempTrans" loading="lazy"><span class="slide-number">Слайд ${index + 1} из&nbsp;${slides.length}</span>`;
-        button.addEventListener('click', () => openViewer(index));
-        slidesElement.appendChild(button);
-      });
-
-      function showSlide(index) {
-        activeIndex = Math.max(0, Math.min(index, slides.length - 1));
-        viewerImage.src = slides[activeIndex];
-        viewerImage.alt = `Слайд ${activeIndex + 1} презентации TempTrans`;
-        viewerCount.textContent = `${activeIndex + 1} / ${slides.length}`;
-        previousButton.disabled = activeIndex === 0;
-        nextButton.disabled = activeIndex === slides.length - 1;
-      }
-
-      function openViewer(index) {
-        showSlide(index);
-        viewer.hidden = false;
-        document.body.style.overflow = 'hidden';
-        closeButton.focus();
-      }
-
-      function closeViewer() {
-        viewer.hidden = true;
-        document.body.style.overflow = '';
-      }
-
-      closeButton.addEventListener('click', closeViewer);
-      previousButton.addEventListener('click', () => showSlide(activeIndex - 1));
-      nextButton.addEventListener('click', () => showSlide(activeIndex + 1));
-      viewer.addEventListener('click', (event) => { if (event.target === viewer) closeViewer(); });
-      viewer.addEventListener('touchstart', (event) => { touchStartX = event.changedTouches[0].screenX; }, { passive: true });
-      viewer.addEventListener('touchend', (event) => {
-        const distance = event.changedTouches[0].screenX - touchStartX;
-        if (Math.abs(distance) < 45) return;
-        showSlide(activeIndex + (distance < 0 ? 1 : -1));
-      }, { passive: true });
-      document.addEventListener('keydown', (event) => {
-        if (viewer.hidden) return;
-        if (event.key === 'Escape') closeViewer();
-        if (event.key === 'ArrowLeft') showSlide(activeIndex - 1);
-        if (event.key === 'ArrowRight') showSlide(activeIndex + 1);
-      });
-    </script>
   </body>
 </html>
