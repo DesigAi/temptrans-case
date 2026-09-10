@@ -46,7 +46,7 @@
     </style>
   </head>
   <body>
-    <iframe class="desktop-pdf" src="./temptrans-case-ru.pdf" title="Разбор кейса TempTrans"></iframe>
+    <iframe class="desktop-pdf" data-src="./temptrans-case-ru.pdf" title="Разбор кейса TempTrans"></iframe>
 
     <main class="mobile-case" aria-label="Результат работы с TempTrans">
       <header class="mobile-header">
@@ -62,8 +62,15 @@
       </section>
       <p class="mobile-note">Листайте вниз, чтобы изучить презентацию.</p>
       <section class="mobile-vertical-slides" aria-label="Вертикальная версия презентации">
-        <img src="./mobile-slides/slide-01.png" alt="Первый слайд презентации TempTrans в мобильном формате" loading="eager" fetchpriority="high">
+        <img src="./mobile-slides/slide-01.png" alt="Первый слайд презентации TempTrans в мобильном формате" width="982" height="1949" loading="eager" decoding="async" fetchpriority="high">
       </section>
     </main>
+
+    <script>
+      const desktopPdf = document.querySelector('.desktop-pdf');
+      if (window.matchMedia('(min-width: 768px)').matches) {
+        desktopPdf.src = desktopPdf.dataset.src;
+      }
+    </script>
   </body>
 </html>
