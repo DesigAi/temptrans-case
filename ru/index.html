@@ -63,18 +63,18 @@
 
     <main class="mobile-case" aria-label="Результат работы с TempTrans">
       <header class="mobile-header">
-        <h1>Результат моей работы с логистической компанией TempTrans</h1>
+        <h1>Результат моей работы с&nbsp;логистической компанией TempTrans</h1>
         <a class="pdf-link" href="./temptrans-case-ru.pdf" download>Скачать PDF</a>
       </header>
       <section class="author-card" aria-label="Об авторе работы">
         <img class="author-photo" src="./assets/ilya-kosik.png" alt="Илья Косик">
         <div class="author-details">
           <strong class="author-name">Илья Косик</strong>
-          <span class="author-role">Разработка и маркетинг сайтов для бизнеса</span>
-          <span class="author-experience">6 лет практического опыта · B2B и сложные продукты</span>
+          <span class="author-role">Разработка и&nbsp;маркетинг сайтов для бизнеса</span>
+          <span class="author-experience">6&nbsp;лет практического опыта · B2B и&nbsp;сложные продукты</span>
         </div>
       </section>
-      <p class="mobile-note">Нажмите на слайд, чтобы открыть его крупно и листать презентацию.</p>
+      <p class="mobile-note">Нажмите на&nbsp;слайд, чтобы открыть его крупно и&nbsp;листать презентацию.</p>
       <section class="slides" id="slides" aria-label="Слайды презентации"></section>
     </main>
 
@@ -105,7 +105,7 @@
         button.type = 'button';
         button.className = 'slide-thumb';
         button.setAttribute('aria-label', `Открыть слайд ${index + 1}`);
-        button.innerHTML = `<img src="${source}" alt="Слайд ${index + 1} презентации TempTrans" loading="lazy"><span class="slide-number">Слайд ${index + 1} из ${slides.length}</span>`;
+        button.innerHTML = `<img src="${source}" alt="Слайд ${index + 1} презентации TempTrans" loading="lazy"><span class="slide-number">Слайд ${index + 1} из&nbsp;${slides.length}</span>`;
         button.addEventListener('click', () => openViewer(index));
         slidesElement.appendChild(button);
       });
@@ -114,7 +114,7 @@
         activeIndex = Math.max(0, Math.min(index, slides.length - 1));
         viewerImage.src = slides[activeIndex];
         viewerImage.alt = `Слайд ${activeIndex + 1} презентации TempTrans`;
-        viewerCount.value = `${activeIndex + 1} / ${slides.length}`;
+        viewerCount.textContent = `${activeIndex + 1} / ${slides.length}`;
         previousButton.disabled = activeIndex === 0;
         nextButton.disabled = activeIndex === slides.length - 1;
       }
