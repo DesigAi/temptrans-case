@@ -18,15 +18,68 @@
     <meta name="twitter:description" content="Research, website structure and new visuals for a transport company.">
     <meta name="twitter:image" content="https://desigai.github.io/temptrans-case/en/preview.jpg">
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="../favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" sizes="180x180">
     <title>TempTrans Case Study</title>
     <style>
-      html, body, iframe { width: 100%; height: 100%; margin: 0; border: 0; }
-      body { background: #111; }
-      .fallback { display: none; }
+      html, body { width: 100%; height: 100%; margin: 0; }
+      body { background: #111; font-family: Arial, sans-serif; }
+      .desktop-pdf { width: 100%; height: 100%; border: 0; display: block; }
+      .mobile-case { display: none; }
+
+      @media (max-width: 767px) {
+        body { background: #f1f3f5; }
+        .desktop-pdf { display: none; }
+        .mobile-case { display: block; min-height: 100%; padding: 18px 14px 34px; box-sizing: border-box; }
+        .mobile-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin: 0 auto 14px; max-width: 720px; }
+        .mobile-header h1 { margin: 0; color: #111; font-size: 21px; line-height: 1.12; letter-spacing: -.02em; }
+        .pdf-link { flex: 0 0 auto; margin-top: 2px; padding: 10px 12px; border-radius: 8px; background: #1674d1; color: #fff; font-size: 12px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+        .author-card { display: flex; align-items: center; gap: 11px; margin: 0 auto 14px; max-width: 720px; padding: 11px 12px; border: 1px solid #d8dde3; border-radius: 10px; background: #fff; box-shadow: 0 3px 10px rgba(20, 29, 38, .06); }
+        .author-photo { flex: 0 0 auto; width: 54px; height: 54px; border-radius: 50%; object-fit: cover; }
+        .author-details { display: grid; gap: 2px; min-width: 0; }
+        .author-name { color: #111; font-size: 16px; font-weight: 700; }
+        .author-meta { color: #5c6370; font-size: 14px; line-height: 1.3; }
+        .mobile-note { margin: 0 auto 14px; max-width: 720px; color: #5c6370; font-size: 14px; line-height: 1.4; }
+        .mobile-vertical-slides { display: grid; gap: 14px; margin: 0 auto; max-width: 720px; }
+        .mobile-vertical-slides img { display: block; width: 100%; height: auto; border: 1px solid #d8dde3; border-radius: 10px; box-sizing: border-box; box-shadow: 0 4px 14px rgba(20, 29, 38, .12); }
+      }
     </style>
   </head>
   <body>
-    <iframe src="./temptrans-case-en.pdf" title="TempTrans Case Study"></iframe>
-    <p class="fallback"><a href="./temptrans-case-en.pdf">Open PDF</a></p>
+    <iframe class="desktop-pdf" data-src="./temptrans-case-en.pdf" title="TempTrans Case Study"></iframe>
+
+    <main class="mobile-case" aria-label="TempTrans case study">
+      <header class="mobile-header">
+        <h1>How I Helped TempTrans Build a Modern Business Tool</h1>
+        <a class="pdf-link" href="./temptrans-case-en.pdf" target="_blank" rel="noopener">Open PDF</a>
+      </header>
+      <section class="author-card" aria-label="About the author">
+        <img class="author-photo" src="./assets/ilya-kosik.png" alt="Ilya Kosik">
+        <div class="author-details">
+          <strong class="author-name">Ilya Kosik</strong>
+          <span class="author-meta">Website development for businesses&nbsp;·&nbsp;6 years of hands-on experience&nbsp;·&nbsp;B2B and complex products</span>
+        </div>
+      </section>
+      <p class="mobile-note">Scroll down to explore the presentation — it takes 3–5 minutes.</p>
+      <section class="mobile-vertical-slides" aria-label="Mobile presentation">
+        <img src="./mobile-slides/slide-01.png" alt="First mobile slide of the TempTrans presentation" width="982" height="1853" loading="eager" decoding="async" fetchpriority="high">
+        <img src="./mobile-slides/slide-02.png" alt="Second mobile slide of the TempTrans presentation" width="982" height="2333" loading="lazy" decoding="async">
+        <img src="./mobile-slides/slide-03.png" alt="Third mobile slide of the TempTrans presentation" width="982" height="2920" loading="lazy" decoding="async">
+        <img src="./mobile-slides/slide-04.png" alt="Fourth mobile slide of the TempTrans presentation" width="982" height="2170" loading="lazy" decoding="async">
+        <img src="./mobile-slides/slide-05.png" alt="Fifth mobile slide of the TempTrans presentation" width="982" height="2323" loading="lazy" decoding="async">
+        <img src="./mobile-slides/slide-06.png" alt="Sixth mobile slide of the TempTrans presentation" width="982" height="2529" loading="lazy" decoding="async">
+        <img src="./mobile-slides/slide-07.png" alt="Seventh mobile slide of the TempTrans presentation" width="982" height="2504" loading="lazy" decoding="async">
+        <img src="./mobile-slides/slide-08.png" alt="Eighth mobile slide of the TempTrans presentation" width="982" height="3398" loading="lazy" decoding="async">
+        <img src="./mobile-slides/slide-09.png" alt="Ninth mobile slide of the TempTrans presentation" width="982" height="2886" loading="lazy" decoding="async">
+        <img src="./mobile-slides/slide-10.png" alt="Tenth mobile slide of the TempTrans presentation" width="982" height="2182" loading="lazy" decoding="async">
+      </section>
+    </main>
+
+    <script>
+      const desktopPdf = document.querySelector('.desktop-pdf');
+      if (window.matchMedia('(min-width: 768px)').matches) {
+        desktopPdf.src = desktopPdf.dataset.src;
+      }
+    </script>
   </body>
 </html>
